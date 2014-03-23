@@ -11,7 +11,8 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls">
+    shell:SystemTray.IsVisible="True" xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    Loaded="PhoneApplicationPage_Loaded">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -23,7 +24,7 @@
         <controls:Pivot Title="qBITTORRENT REMOTE">
             
             <controls:PivotItem Header="active">
-                <Grid/>
+                <TextBlock Text="Unable to connect. Please check your settings" Name="ErrorBlock"/>
             </controls:PivotItem>
 
             
