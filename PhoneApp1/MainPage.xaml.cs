@@ -60,27 +60,18 @@ namespace PhoneApp1
 
         private void refreshTorrents()
         {
-            var client = new RestClient("http://" + authSettings.Host + ":" + authSettings.Port);
-            //client.Authenticator = new HttpBasicAuthenticator(authSettings.Username, authSettings.Password);
-            var request = new RestRequest();
-            request.Resource = "/json/torrents";
-            request.Credentials = new NetworkCredential(authSettings.Username, authSettings.Password);
-            client.ExecuteAsync(request, (response) =>
-            {
-                Console.WriteLine(response.StatusCode);
-                Console.Write(response.RawBytes);
-                if (response.ResponseStatus == ResponseStatus.Completed)
-                {
-                    //success(response.Data);
-                    Console.WriteLine(response.Content);
-                }
-                else
-                {
-                    //failure(response.ErrorMessage);
-                    Console.WriteLine(response.ErrorMessage);
-                }
-            });
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.FetchAllTorrents(TorrentsReceived, TorrentsRecvError);
+        }
 
+        public void TorrentsReceived(List<Torrent> torrents)
+        {
+            MessageBox.Show(torrents.Count + " torrents received. E.g. " + torrents[0].Name);
+        }
+
+        public void TorrentsRecvError()
+        {
+            MessageBox.Show("Failed to fetch torrents. Please check your settings");
         }
     }
 }
