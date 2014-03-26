@@ -21,17 +21,33 @@ namespace PhoneApp1
         private StorageWrapper storage;
         private AuthSettings authSettings;
         public bool settingsCorrect { get; set; }
+        public List<Torrent> ActiveTorrents { get; set; }
+        public List<Torrent> SeedingTorrents { get; set; }
+        public List<Torrent> DownloadingTorrents { get; set; }
+        public List<Torrent> AllTorrents { get; set; }
 
-        // Constructor
+
+        // Constructor-----------------------------------------------------------------------------
         public MainPage()
         {
             InitializeComponent();
             storage = new StorageWrapper(IsolatedStorageSettings.ApplicationSettings);
+            ActiveTorrents = new List<Torrent>();
+            SeedingTorrents = new List<Torrent>();
+            DownloadingTorrents = new List<Torrent>();
+            AllTorrents = new List<Torrent>();
+
         }
 
+        // Event Handlers--------------------------------------------------------------------------
         private void Settings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Settings.xaml", UriKind.Relative));
+        }
+
+        private void Refresh_Click(object sender, EventArgs e)
+        {
+            refreshTorrents();
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
@@ -49,6 +65,7 @@ namespace PhoneApp1
             }
         }
 
+        //-----------------------------------------------------------------------------------------
         private bool checkSettings()
         {
             bool invalid = string.IsNullOrWhiteSpace(authSettings.Host)
@@ -66,7 +83,29 @@ namespace PhoneApp1
 
         public void TorrentsReceived(List<Torrent> torrents)
         {
-            MessageBox.Show(torrents.Count + " torrents received. E.g. " + torrents[0].Name);
+            ActiveTorrents.Clear();
+            DownloadingTorrents.Clear();
+            SeedingTorrents.Clear();
+            torrents.ForEach(t =>
+            {
+                if (t.TorrentState.Active)
+                {
+                    ActiveTorrents.Add(t);
+                }
+                if (t.TorrentState.Downloading)
+                {
+                    DownloadingTorrents.Add(t);
+                }
+                if (t.TorrentState.Seeding)
+                {
+                    SeedingTorrents.Add(t);
+                }
+            });
+            AllTorrents = torrents;
+            AllTorrentsListBox.ItemsSource = torrents;
+            ActiveListBox.ItemsSource = ActiveTorrents;
+            DownloadingListBox.ItemsSource = DownloadingTorrents;
+            SeedingListBox.ItemsSource = SeedingTorrents;
         }
 
         public void TorrentsRecvError()

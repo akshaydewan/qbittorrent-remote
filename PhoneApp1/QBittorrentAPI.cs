@@ -32,8 +32,6 @@ namespace PhoneApp1
             request.Credentials = new NetworkCredential(authSettings.Username, authSettings.Password);
             client.ExecuteAsync<List<Torrent>>(request, (response) =>
             {
-                Console.WriteLine(response.StatusCode);
-                Console.Write(response.RawBytes);
                 if (response.ResponseStatus == ResponseStatus.Error)
                 {
                     errorResponse();

@@ -13,6 +13,7 @@ namespace PhoneApp1
 {
     public class Torrent
     {
+        private string _state;
         public string Hash { get; set; }
         public string Name { get; set; }
         public string Size { get; set; }
@@ -24,6 +25,26 @@ namespace PhoneApp1
         public int NumLeechs { get; set; }
         public string Ratio { get; set; }
         public string ETA { get; set; }
-        public string State { get; set; }
+        public string State
+        {
+            get
+            {
+                return _state;
+            }
+            set
+            {
+                _state = value;
+                this.TorrentState = TorrentState.create(value);
+
+            }
+        }
+        public TorrentState TorrentState { get; set; }
+        public string ProgressPercent
+        {
+            get
+            {
+                return Progress * 100 + "%";
+            }
+        }
     }
 }

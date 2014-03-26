@@ -20,34 +20,117 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <controls:Pivot Title="qBITTORRENT REMOTE">
-            
+
             <controls:PivotItem Header="active">
-                <TextBlock Text="Unable to connect. Please check your settings" Name="ErrorBlock"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Unable to connect. Please check your settings" Name="ErrorBlock"/>
+                    <ListBox Height="534" HorizontalAlignment="Center" Margin="0,0,0,0" Name="ActiveListBox" VerticalAlignment="Top" Width="460">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding TorrentState.DisplayName}"/>
+                                        <TextBlock Text="  "/>
+                                        <TextBlock Text="DL: "/>
+                                        <TextBlock Text="{Binding DlSpeed}"/>
+                                        <TextBlock Text="  "/>
+                                        <TextBlock Text="UL: "/>
+                                        <TextBlock Text="{Binding UpSpeed}"/>
+                                        <TextBlock Text="  "/>
+                                        <TextBlock Text="Done: "/>
+                                        <TextBlock Text="{Binding ProgressPercent}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
             </controls:PivotItem>
 
-            
+
             <controls:PivotItem Header="downloading">
-                <Grid/>
+                <ListBox Height="534" HorizontalAlignment="Center" Margin="0,0,0,0" Name="DownloadingListBox" VerticalAlignment="Top" Width="460">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,8">
+                                <TextBlock Text="{Binding Name}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding TorrentState.DisplayName}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="DL: "/>
+                                    <TextBlock Text="{Binding DlSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="UL: "/>
+                                    <TextBlock Text="{Binding UpSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="Done: "/>
+                                    <TextBlock Text="{Binding ProgressPercent}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </controls:PivotItem>
-            
+
             <controls:PivotItem Header="seeding">
-                <Grid/>
+                <ListBox Height="534" HorizontalAlignment="Center" Margin="0,0,0,0" Name="SeedingListBox" VerticalAlignment="Top" Width="460">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,8">
+                                <TextBlock Text="{Binding Name}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding TorrentState.DisplayName}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="DL: "/>
+                                    <TextBlock Text="{Binding DlSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="UL: "/>
+                                    <TextBlock Text="{Binding UpSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="Done: "/>
+                                    <TextBlock Text="{Binding ProgressPercent}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </controls:PivotItem>
 
             <controls:PivotItem Header="all">
-                <Grid/>
+                <ListBox Height="534" HorizontalAlignment="Center" Margin="0,0,0,0" Name="AllTorrentsListBox" VerticalAlignment="Top" Width="460">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,8">
+                                <TextBlock Text="{Binding Name}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding TorrentState.DisplayName}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="DL: "/>
+                                    <TextBlock Text="{Binding DlSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="UL: "/>
+                                    <TextBlock Text="{Binding UpSpeed}"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="Done: "/>
+                                    <TextBlock Text="{Binding ProgressPercent}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </controls:PivotItem>
         </controls:Pivot>
     </Grid>
- 
-    
+
+
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized">
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Settings" Click="Settings_Click"/>
-                <shell:ApplicationBarMenuItem Text="Refresh"/>
+                <shell:ApplicationBarMenuItem Text="Refresh" Click="Refresh_Click"/>
                 <shell:ApplicationBarMenuItem Text="Pause All"/>
                 <shell:ApplicationBarMenuItem Text="Resume All"/>
             </shell:ApplicationBar.MenuItems>
