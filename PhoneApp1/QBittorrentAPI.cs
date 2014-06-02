@@ -10,6 +10,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using RestSharp;
+using System.Text;
+using System.Diagnostics;
 
 namespace PhoneApp1
 {
@@ -26,21 +28,35 @@ namespace PhoneApp1
 
         public void FetchAllTorrents(TorrentsReceived successResponse, TorrentsRecvError errorResponse)
         {
-            var client = new RestClient("http://" + authSettings.Host + ":" + authSettings.Port);
+            string url = "http://" + authSettings.Host + ":" + authSettings.Port;
+            Debug.WriteLine("Making RestClient with URL: " + url);
+            var client = new RestClient(url);
             var request = new RestRequest();
             request.Resource = "json/torrents";
             request.Credentials = new NetworkCredential(authSettings.Username, authSettings.Password);
-            client.ExecuteAsync<List<Torrent>>(request, (response) =>
+            try
             {
-                if (response.ResponseStatus == ResponseStatus.Error)
+                client.ExecuteAsync<List<Torrent>>(request, (response) =>
                 {
-                    errorResponse();
-                }
-                else
-                {
-                    successResponse(response.Data);
-                }
-            });
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        errorResponse();
+                    }
+                    else
+                    {
+                        string rawData = UTF8Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
+                        System.Diagnostics.Debug.WriteLine(rawData);
+                        successResponse(response.Data);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                //TODO: better exception handling here
+                Debug.WriteLine("Exception was caught while attempting to fetch torrents: " + e.Message);
+                errorResponse();
+            }
         }
     }
+    
 }

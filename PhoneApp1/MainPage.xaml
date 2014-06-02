@@ -21,8 +21,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <ProgressBar Name="ProgressBar" VerticalAlignment="Top" Height="4" Width="460" IsIndeterminate="True" Visibility="Collapsed"/>
         <controls:Pivot Title="qBITTORRENT REMOTE">
-
             <controls:PivotItem Header="active">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Unable to connect. Please check your settings" Name="ErrorBlock"/>

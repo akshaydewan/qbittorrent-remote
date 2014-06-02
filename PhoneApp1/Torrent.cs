@@ -21,8 +21,8 @@ namespace PhoneApp1
         public string DlSpeed { get; set; }
         public string UpSpeed { get; set; }
         public string Priority { get; set; }
-        public int NumSeeds { get; set; }
-        public int NumLeechs { get; set; }
+        public string NumSeeds { get; set; }
+        public string NumLeechs { get; set; }
         public string Ratio { get; set; }
         public string ETA { get; set; }
         public string State

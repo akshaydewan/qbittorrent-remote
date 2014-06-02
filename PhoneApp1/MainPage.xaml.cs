@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using RestSharp;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace PhoneApp1
 {
@@ -21,10 +23,10 @@ namespace PhoneApp1
         private StorageWrapper storage;
         private AuthSettings authSettings;
         public bool settingsCorrect { get; set; }
-        public List<Torrent> ActiveTorrents { get; set; }
-        public List<Torrent> SeedingTorrents { get; set; }
-        public List<Torrent> DownloadingTorrents { get; set; }
-        public List<Torrent> AllTorrents { get; set; }
+        public Collection<Torrent> ActiveTorrents { get; set; }
+        public Collection<Torrent> SeedingTorrents { get; set; }
+        public Collection<Torrent> DownloadingTorrents { get; set; }
+        public Collection<Torrent> AllTorrents { get; set; }
 
 
         // Constructor-----------------------------------------------------------------------------
@@ -32,11 +34,15 @@ namespace PhoneApp1
         {
             InitializeComponent();
             storage = new StorageWrapper(IsolatedStorageSettings.ApplicationSettings);
-            ActiveTorrents = new List<Torrent>();
-            SeedingTorrents = new List<Torrent>();
-            DownloadingTorrents = new List<Torrent>();
-            AllTorrents = new List<Torrent>();
+            ActiveTorrents = new ObservableCollection<Torrent>();
+            SeedingTorrents = new ObservableCollection<Torrent>();
+            DownloadingTorrents = new ObservableCollection<Torrent>();
+            AllTorrents = new ObservableCollection<Torrent>();
 
+            AllTorrentsListBox.ItemsSource = AllTorrents;
+            ActiveListBox.ItemsSource = ActiveTorrents;
+            DownloadingListBox.ItemsSource = DownloadingTorrents;
+            SeedingListBox.ItemsSource = SeedingTorrents;
         }
 
         // Event Handlers--------------------------------------------------------------------------
@@ -47,13 +53,21 @@ namespace PhoneApp1
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            refreshTorrents();
+            if (settingsCorrect)
+            {
+                ErrorBlock.Visibility = System.Windows.Visibility.Collapsed;
+                refreshTorrents();
+            }
+            else
+            {
+                ErrorBlock.Visibility = System.Windows.Visibility.Visible;
+            }
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
             authSettings = storage.LoadAuthSettings();
-            settingsCorrect = checkSettings();
+            settingsCorrect = areSettingsValid();
             if (settingsCorrect)
             {
                 ErrorBlock.Visibility = System.Windows.Visibility.Collapsed;
@@ -66,7 +80,7 @@ namespace PhoneApp1
         }
 
         //-----------------------------------------------------------------------------------------
-        private bool checkSettings()
+        private bool areSettingsValid()
         {
             bool invalid = string.IsNullOrWhiteSpace(authSettings.Host)
                             || authSettings.Port <= 0
@@ -75,42 +89,64 @@ namespace PhoneApp1
             return !invalid;
         }
 
+        private void showProgressBar(bool show)
+        {
+            if (show)
+            {
+                ProgressBar.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                ProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+            }
+        }
+
         private void refreshTorrents()
         {
+            clearTorrents();
+            showProgressBar(true);
             QBittorrentAPI api = new QBittorrentAPI(authSettings);
             api.FetchAllTorrents(TorrentsReceived, TorrentsRecvError);
         }
 
-        public void TorrentsReceived(List<Torrent> torrents)
+        private void clearTorrents()
         {
             ActiveTorrents.Clear();
             DownloadingTorrents.Clear();
             SeedingTorrents.Clear();
-            torrents.ForEach(t =>
+            AllTorrents.Clear();
+        }
+
+        public void TorrentsReceived(List<Torrent> torrents)
+        {
+            Debug.WriteLine("Torrents Received");
+            if (torrents != null)
             {
-                if (t.TorrentState.Active)
+                torrents.ForEach(t =>
                 {
-                    ActiveTorrents.Add(t);
-                }
-                if (t.TorrentState.Downloading)
-                {
-                    DownloadingTorrents.Add(t);
-                }
-                if (t.TorrentState.Seeding)
-                {
-                    SeedingTorrents.Add(t);
-                }
-            });
-            AllTorrents = torrents;
-            AllTorrentsListBox.ItemsSource = torrents;
-            ActiveListBox.ItemsSource = ActiveTorrents;
-            DownloadingListBox.ItemsSource = DownloadingTorrents;
-            SeedingListBox.ItemsSource = SeedingTorrents;
+                    if (t.TorrentState.Active)
+                    {
+                        ActiveTorrents.Add(t);
+                    }
+                    if (t.TorrentState.Downloading)
+                    {
+                        DownloadingTorrents.Add(t);
+                    }
+                    if (t.TorrentState.Seeding)
+                    {
+                        SeedingTorrents.Add(t);
+                    }
+                    AllTorrents.Add(t);
+                });
+            }
+            showProgressBar(false);
         }
 
         public void TorrentsRecvError()
         {
+            Debug.WriteLine("Error while receiving torrents");
             MessageBox.Show("Failed to fetch torrents. Please check your settings");
+            showProgressBar(false);
         }
     }
 }
