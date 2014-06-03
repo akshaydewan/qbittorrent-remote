@@ -91,14 +91,7 @@ namespace PhoneApp1
 
         private void showProgressBar(bool show)
         {
-            if (show)
-            {
-                ProgressBar.Visibility = System.Windows.Visibility.Visible;
-            }
-            else
-            {
-                ProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-            }
+            ProgressBar.IsVisible = show;
         }
 
         private void refreshTorrents()
