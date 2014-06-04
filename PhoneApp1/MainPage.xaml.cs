@@ -79,6 +79,21 @@ namespace PhoneApp1
             }
         }
 
+        private void PauseAll_Click(object sender, EventArgs e)
+        {
+            showProgressBar(true);
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.PauseAll(PauseAllSucceeded, PauseAllFailed);
+        }
+
+        private void ResumeAll_Click(object sender, EventArgs e)
+        {
+            showProgressBar(true);
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.ResumeAll(ResumeAllSucceeded, ResumeAllFailed);
+        }
+
+
         //-----------------------------------------------------------------------------------------
         private bool areSettingsValid()
         {
@@ -138,7 +153,29 @@ namespace PhoneApp1
         public void TorrentsRecvError()
         {
             Debug.WriteLine("Error while receiving torrents");
-            MessageBox.Show("Failed to fetch torrents. Please check your settings");
+            MessageBox.Show("Failed to fetch torrents. Please check your settings and make sure you're connected to the Internet");
+            showProgressBar(false);
+        }
+
+        private void PauseAllSucceeded()
+        {
+            refreshTorrents();
+        }
+
+        public void PauseAllFailed()
+        {
+            MessageBox.Show("Failed to pause torrents. Please check your Internet connection and try again.");
+            showProgressBar(false);
+        }
+
+        private void ResumeAllSucceeded()
+        {
+            refreshTorrents();
+        }
+
+        public void ResumeAllFailed()
+        {
+            MessageBox.Show("Failed to resume torrents. Please check your Internet connection and try again.");
             showProgressBar(false);
         }
     }

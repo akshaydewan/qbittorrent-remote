@@ -124,6 +124,7 @@
     </Content>
     <Resource Include="Icons\qBittorrentRemote173.png" />
     <Resource Include="Icons\qBittorrentRemote62.png" />
+    <Content Include="Icons\appbar.feature.settings.rest.png" />
     <Content Include="Icons\appbar.refresh.rest.png" />
     <Content Include="Icons\appbar.transport.pause.rest.png" />
     <Content Include="Icons\appbar.transport.play.rest.png" />

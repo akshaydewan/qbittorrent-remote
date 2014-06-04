@@ -125,6 +125,60 @@ namespace PhoneApp1
                 failureResponse();
             }
         }
+
+        public void PauseAll(GenericSuccess successResponse, GenericSuccess failureResponse)
+        {
+            var client = createRestClient();
+            var request = new RestRequest("command/pauseall", Method.POST);
+            request.Credentials = new NetworkCredential(authSettings.Username, authSettings.Password);
+            try
+            {
+                client.ExecuteAsync(request, (response) =>
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        failureResponse();
+                    }
+                    else
+                    {
+                        successResponse();
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                //TODO: better exception handling here
+                Debug.WriteLine("Exception was caught while attempting to pause all torrents: " + e.Message);
+                failureResponse();
+            }
+        }
+
+        public void ResumeAll(GenericSuccess successResponse, GenericSuccess failureResponse)
+        {
+            var client = createRestClient();
+            var request = new RestRequest("command/resumeall", Method.POST);
+            request.Credentials = new NetworkCredential(authSettings.Username, authSettings.Password);
+            try
+            {
+                client.ExecuteAsync(request, (response) =>
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        failureResponse();
+                    }
+                    else
+                    {
+                        successResponse();
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                //TODO: better exception handling here
+                Debug.WriteLine("Exception was caught while attempting to resume all torrents: " + e.Message);
+                failureResponse();
+            }
+        }
     }
     
 }
