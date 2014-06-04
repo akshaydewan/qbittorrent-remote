@@ -64,8 +64,7 @@
  
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
-            <shell:ApplicationBarIconButton IconUri="/Icons/appbar.transport.pause.rest.png" Text="Pause"/>
-            <shell:ApplicationBarIconButton IconUri="/Icons/appbar.transport.play.rest.png" Text="Resume"/>
+            <shell:ApplicationBarIconButton IconUri="/Icons/appbar.transport.pause.rest.png" x:Name="PauseResumeButton" Text="-" Click="PauseResume_Click" IsEnabled="False"/>
             <shell:ApplicationBarIconButton IconUri="/Icons/appbar.refresh.rest.png" Text="Refresh" Click="Refresh_Click"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

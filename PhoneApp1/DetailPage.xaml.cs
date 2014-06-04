@@ -13,6 +13,7 @@ using Microsoft.Phone.Controls;
 using PhoneApp1;
 using System.IO.IsolatedStorage;
 using System.Diagnostics;
+using Microsoft.Phone.Shell;
 
 namespace QBittorrentRemote
 {
@@ -25,7 +26,9 @@ namespace QBittorrentRemote
 
         public Torrent torrent { get; set; }
 
-        private string err = "Unable to fetch torrent details. Please check your settings and connection";
+        private const string err = "Unable to fetch torrent details. Please check your settings and connection";
+        private const string pauseIcon = "/Icons/appbar.transport.pause.rest.png";
+        private const string resumeIcon = "/Icons/appbar.transport.play.rest.png";
 
         public DetailPage()
         {
@@ -34,6 +37,7 @@ namespace QBittorrentRemote
             authSettings = storage.LoadAuthSettings();
         }
 
+        //Event Handlers --------------------------------------------------------------------------
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -48,11 +52,17 @@ namespace QBittorrentRemote
             }
         }
 
-        private void fetchTorrentDetails(string torrentHash)
+        private void PauseResume_Click(object sender, EventArgs e)
         {
-            showProgressBar(true);
-            QBittorrentAPI api = new QBittorrentAPI(authSettings);
-            api.FetchAllTorrents(TorrentsReceived, TorrentsRecvError);
+            enablePauseResumeButton(false);
+            if (torrent.TorrentState.Paused)
+            {
+                resumeTorrent();
+            }
+            else
+            {
+                pauseTorrent();
+            }
         }
 
         public void TorrentsReceived(List<Torrent> torrents)
@@ -75,16 +85,54 @@ namespace QBittorrentRemote
             showProgressBar(false);
         }
 
-        private Torrent findTorrent(List<Torrent> torrents, string hash)
-        {
-            return torrents.FirstOrDefault(t => t.Hash == hash);
-        }
-
         public void TorrentsRecvError()
         {
             Debug.WriteLine("Error while receiving torrents");
             MessageBox.Show(err);
             showProgressBar(false);
+        }
+
+        private void Refresh_Click(object sender, EventArgs e)
+        {
+            fetchTorrentDetails(torrentHash);
+        }
+
+        private void pauseSuccess()
+        {
+            fetchTorrentDetails(torrent.Hash);
+        }
+
+        private void pauseFail()
+        {
+            showProgressBar(false);
+            MessageBox.Show("There was an error while trying to pause the torrent. Check your internet connection and try again");
+            setPauseButtonState(torrent.TorrentState.Paused);
+        }
+
+        private void resumeSuccess()
+        {
+            fetchTorrentDetails(torrent.Hash);
+        }
+
+        private void resumeFail()
+        {
+            showProgressBar(false);
+            MessageBox.Show("There was an error while trying to resume the torrent. Check your internet connection and try again");
+            setPauseButtonState(torrent.TorrentState.Paused);
+        }
+
+        //Private methods -------------------------------------------------------------------------
+
+        private void fetchTorrentDetails(string torrentHash)
+        {
+            showProgressBar(true);
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.FetchAllTorrents(TorrentsReceived, TorrentsRecvError);
+        }
+
+        private Torrent findTorrent(List<Torrent> torrents, string hash)
+        {
+            return torrents.FirstOrDefault(t => t.Hash == hash);
         }
 
         private void showProgressBar(bool show)
@@ -104,11 +152,46 @@ namespace QBittorrentRemote
             SizeValue.Text = torrent.Size;
             DLValue.Text = torrent.DlSpeed;
             ULValue.Text = torrent.UpSpeed;
+            setPauseButtonState(torrent.TorrentState.Paused);
         }
 
-        private void Refresh_Click(object sender, EventArgs e)
+        private void setPauseButtonState(bool paused)
         {
-            fetchTorrentDetails(torrentHash);
+            ApplicationBarIconButton btn = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
+            if (paused)
+            {
+                btn.IconUri = new Uri(resumeIcon, UriKind.Relative);
+                btn.Text = "Resume";
+            }
+            else
+            {
+                btn.IconUri = new Uri(pauseIcon, UriKind.Relative);
+                btn.Text = "Pause";
+            }
+            btn.IsEnabled = true;
         }
+
+        private void enablePauseResumeButton(bool isEnabled)
+        {
+            ApplicationBarIconButton btn = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
+            btn.IsEnabled = isEnabled;
+        }
+
+        private void pauseTorrent()
+        {
+            showProgressBar(true);
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.PauseTorrent(torrent.Hash, pauseSuccess, pauseFail);
+        }
+
+        private void resumeTorrent()
+        {
+            showProgressBar(true);
+            QBittorrentAPI api = new QBittorrentAPI(authSettings);
+            api.ResumeTorrent(torrent.Hash, resumeSuccess, resumeFail);
+        }
+
+
+
     }
 }

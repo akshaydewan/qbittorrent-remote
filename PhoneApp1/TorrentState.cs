@@ -18,11 +18,13 @@ namespace PhoneApp1
         public bool Active { get; set; }
         public bool Downloading { get; set; }
         public bool Seeding { get; set; }
+        public bool Paused { get; set; }
 
         public static TorrentState create(string name)
         {
             var torrentState = new TorrentState();
             torrentState.Name = name;
+            torrentState.Paused = false;
             switch (name)
             {
                 case "error":
@@ -31,10 +33,12 @@ namespace PhoneApp1
                 case "pausedUP":
                     torrentState.DisplayName = "Paused";
                     torrentState.Seeding = true;
+                    torrentState.Paused = true;
                     break;
                 case "pausedDL":
                     torrentState.DisplayName = "Paused";
                     torrentState.Downloading = true;
+                    torrentState.Paused = true;
                     break;
                 case "queuedUP":
                     torrentState.DisplayName = "Queued";
