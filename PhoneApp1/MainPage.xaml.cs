@@ -153,8 +153,8 @@ namespace PhoneApp1
         public void TorrentsRecvError()
         {
             Debug.WriteLine("Error while receiving torrents");
-            MessageBox.Show("Failed to fetch torrents. Please check your settings and make sure you're connected to the Internet");
             showProgressBar(false);
+            MessageBox.Show("Failed to fetch torrents. Please check your settings and make sure you're connected to the Internet");
         }
 
         private void PauseAllSucceeded()
@@ -164,8 +164,8 @@ namespace PhoneApp1
 
         public void PauseAllFailed()
         {
-            MessageBox.Show("Failed to pause torrents. Please check your Internet connection and try again.");
             showProgressBar(false);
+            MessageBox.Show("Failed to pause torrents. Please check your Internet connection and try again.");
         }
 
         private void ResumeAllSucceeded()
@@ -175,8 +175,8 @@ namespace PhoneApp1
 
         public void ResumeAllFailed()
         {
-            MessageBox.Show("Failed to resume torrents. Please check your Internet connection and try again.");
             showProgressBar(false);
+            MessageBox.Show("Failed to resume torrents. Please check your Internet connection and try again.");
         }
     }
 }

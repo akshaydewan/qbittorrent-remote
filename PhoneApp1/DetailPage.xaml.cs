@@ -71,15 +71,19 @@ namespace QBittorrentRemote
             if (torrents == null)
             {
                 Debug.WriteLine("Torrent list was null");
+                showProgressBar(false);
                 MessageBox.Show(err);
                 NavigationService.GoBack();
+                return;
             }
             torrent = findTorrent(torrents, torrentHash);
             if (torrent == null)
             {
                 Debug.WriteLine("Could not find torrent with the provided hash");
+                showProgressBar(false);
                 MessageBox.Show(err);
                 NavigationService.GoBack();
+                return;
             }
             populateUI();
             showProgressBar(false);
@@ -88,8 +92,8 @@ namespace QBittorrentRemote
         public void TorrentsRecvError()
         {
             Debug.WriteLine("Error while receiving torrents");
-            MessageBox.Show(err);
             showProgressBar(false);
+            MessageBox.Show(err);
         }
 
         private void Refresh_Click(object sender, EventArgs e)
