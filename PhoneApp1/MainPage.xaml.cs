@@ -81,16 +81,22 @@ namespace PhoneApp1
 
         private void PauseAll_Click(object sender, EventArgs e)
         {
-            showProgressBar(true);
-            QBittorrentAPI api = new QBittorrentAPI(authSettings);
-            api.PauseAll(PauseAllSucceeded, PauseAllFailed);
+            if (MessageBox.Show("Really pause all torrents?", "Pause all", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                showProgressBar(true);
+                QBittorrentAPI api = new QBittorrentAPI(authSettings);
+                api.PauseAll(PauseAllSucceeded, PauseAllFailed);
+            }
         }
 
         private void ResumeAll_Click(object sender, EventArgs e)
         {
-            showProgressBar(true);
-            QBittorrentAPI api = new QBittorrentAPI(authSettings);
-            api.ResumeAll(ResumeAllSucceeded, ResumeAllFailed);
+            if (MessageBox.Show("Really resume all torrents?", "Resume all", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                showProgressBar(true);
+                QBittorrentAPI api = new QBittorrentAPI(authSettings);
+                api.ResumeAll(ResumeAllSucceeded, ResumeAllFailed);
+            }
         }
 
 
