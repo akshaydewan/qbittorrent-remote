@@ -43,7 +43,7 @@ namespace PhoneApp1
         {
             get
             {
-                return Progress * 100 + "%";
+                return Math.Round(Progress * 100, 2) + "%";
             }
         }
     }

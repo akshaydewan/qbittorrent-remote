@@ -47,7 +47,7 @@ namespace PhoneApp1
                     torrentState.DisplayName = "Queued";
                     break;
                 case "uploading":
-                    torrentState.DisplayName = "Uploading";
+                    torrentState.DisplayName = "U/L";
                     torrentState.Active = true;
                     torrentState.Seeding = true;
                     break;
@@ -66,7 +66,7 @@ namespace PhoneApp1
                     torrentState.DisplayName = "Checking";
                     break;
                 case "downloading":
-                    torrentState.DisplayName = "Downloading";
+                    torrentState.DisplayName = "D/L";
                     torrentState.Active = true;
                     torrentState.Downloading = true;
                     break;
