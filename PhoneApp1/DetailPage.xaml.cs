@@ -161,15 +161,13 @@ namespace QBittorrentRemote
 
         private void setPauseButtonState(bool paused)
         {
-            ApplicationBarIconButton btn = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
+            ApplicationBarMenuItem btn = ApplicationBar.MenuItems[0] as ApplicationBarMenuItem;
             if (paused)
             {
-                btn.IconUri = new Uri(resumeIcon, UriKind.Relative);
                 btn.Text = "Resume";
             }
             else
             {
-                btn.IconUri = new Uri(pauseIcon, UriKind.Relative);
                 btn.Text = "Pause";
             }
             btn.IsEnabled = true;
@@ -177,7 +175,7 @@ namespace QBittorrentRemote
 
         private void enablePauseResumeButton(bool isEnabled)
         {
-            ApplicationBarIconButton btn = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
+            ApplicationBarMenuItem btn = ApplicationBar.MenuItems[0] as ApplicationBarMenuItem;
             btn.IsEnabled = isEnabled;
         }
 
